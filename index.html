@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線徑與無熔絲開關選用</title>
+<meta name="description" content="依《用戶用電設備裝置規則》與華新麗華、大同、太平洋電線電纜型錄，查詢 PVC、XLPE、105℃ PVC、海巴龍導線之安培容量與對應無熔絲開關（NFB）額定。">
+<style>
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --surface-2:#f0f2f5; --text:#1b1f24; --muted:#5d6672;
+  --border:#d9dde3; --accent:#0b6bcb; --accent-soft:#e3effb; --ok:#1a7f37; --ok-soft:#e6f4ea;
+  --warn:#9a6700; --warn-soft:#fff4d6; --bad:#c62828; --bad-soft:#fde7e7; --hl:#fff1b8;
+  --c-pvc:#5b6b7a; --c-xlpe:#0b6bcb; --c-105:#b35c00; --c-hyp:#2e7d32;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1216; --surface:#171b21; --surface-2:#1f252d; --text:#e6e9ed; --muted:#9aa4b0;
+    --border:#2c333d; --accent:#5aa9ff; --accent-soft:#16283d; --ok:#56c271; --ok-soft:#14291b;
+    --warn:#e3b341; --warn-soft:#2d2410; --bad:#ff7b72; --bad-soft:#331616; --hl:#3a3313;
+    --c-pvc:#9aa8b5; --c-xlpe:#5aa9ff; --c-105:#f0a050; --c-hyp:#6cc070;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1216; --surface:#171b21; --surface-2:#1f252d; --text:#e6e9ed; --muted:#9aa4b0;
+  --border:#2c333d; --accent:#5aa9ff; --accent-soft:#16283d; --ok:#56c271; --ok-soft:#14291b;
+  --warn:#e3b341; --warn-soft:#2d2410; --bad:#ff7b72; --bad-soft:#331616; --hl:#3a3313;
+  --c-pvc:#9aa8b5; --c-xlpe:#5aa9ff; --c-105:#f0a050; --c-hyp:#6cc070;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif}
+header{background:var(--surface);border-bottom:1px solid var(--border)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px;padding-bottom:14px;flex-wrap:wrap}
+h1{font-size:22px;margin:0}
+.sub{color:var(--muted);font-size:13px;margin:2px 0 0}
+.themebtn{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--border);background:var(--surface)}
+nav.tabs button{flex:0 0 auto;border:0;background:none;color:var(--muted);padding:10px 14px;font:inherit;cursor:pointer;border-bottom:2px solid transparent}
+nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+main{padding:18px 0 40px}
+section.panel{display:none}
+section.panel.on{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.card h2{font-size:17px;margin:0 0 10px}
+.card h3{font-size:15px;margin:14px 0 6px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+select,input[type=number]{font:inherit;color:var(--text);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:7px 9px;width:100%}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.note{font-size:13px;color:var(--muted)}
+.alert{border-radius:8px;padding:9px 12px;font-size:13px;margin:10px 0}
+.alert.warn{background:var(--warn-soft);color:var(--warn)}
+.alert.info{background:var(--accent-soft);color:var(--accent)}
+.alert.bad{background:var(--bad-soft);color:var(--bad)}
+.tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 9px;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+th{background:var(--surface-2);font-weight:600;position:sticky;top:0;z-index:1}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+th:first-child{background:var(--surface-2);z-index:2}
+tr.pick td{background:var(--hl)}
+tr.pick td:first-child{background:var(--hl)}
+td.na{color:var(--muted)}
+.tag{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:999px;background:var(--surface-2);color:var(--muted);margin-left:4px}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.cap{background:var(--warn-soft);color:var(--warn)}
+.result{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.res{border:1px solid var(--border);border-radius:10px;padding:12px;border-top:4px solid var(--c)}
+.res .nm{font-weight:600}
+.res .big{font-size:26px;font-weight:700;margin:4px 0}
+.res .big small{font-size:14px;font-weight:500;color:var(--muted)}
+.res dl{margin:6px 0 0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:13px}
+.res dt{color:var(--muted)} .res dd{margin:0;text-align:right}
+.mat{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.mat .m{border:1px solid var(--border);border-radius:10px;padding:14px;border-left:5px solid var(--c)}
+.mat .m h3{margin:0 0 4px}
+.mat .m .t{font-size:24px;font-weight:700;color:var(--c)}
+.mat ul{margin:6px 0 0;padding-left:18px;font-size:13.5px}
+ol.src li,ul.plain li{margin:4px 0}
+a{color:var(--accent)}
+footer{color:var(--muted);font-size:12.5px;text-align:center;padding:16px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:middle}
+@media (max-width:560px){h1{font-size:19px} th,td{padding:6px 7px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>線徑 × 安培容量 × 無熔絲開關 選用工具</h1>
+      <p class="sub">PVC／XLPE／105℃ PVC／海巴龍 ・ 依《用戶用電設備裝置規則》（114.05.09 修正）＋ 華新麗華・大同・太平洋型錄</p>
+    </div>
+    <button class="themebtn" id="themeBtn" type="button">切換深色／淺色</button>
+  </div>
+  <nav class="tabs wrap" role="tablist">
+    <button role="tab" data-tab="nfb" aria-selected="true">由 NFB 反查線徑</button>
+    <button role="tab" data-tab="calc" aria-selected="false">依條件查安培容量</button>
+    <button role="tab" data-tab="compare" aria-selected="false">四種導線對照總表</button>
+    <button role="tab" data-tab="mfr" aria-selected="false">廠商型錄原始值</button>
+    <button role="tab" data-tab="mat" aria-selected="false">絕緣材料說明</button>
+    <button role="tab" data-tab="rules" aria-selected="false">規則重點與來源</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<!-- 共用條件 -->
+<div class="card" id="condCard">
+  <h2>設計條件</h2>
+  <div class="grid">
+    <label class="f">配線方式
+      <select id="method">
+        <option value="metal">金屬導線管／金屬可撓管／金屬線槽／電纜（表25-2～25-4）</option>
+        <option value="pvc">PVC 管／HDPE 管／非金屬可撓管（60℃ 額定，表25-5）</option>
+        <option value="nmhi">電纜穿額定 ≥75／90℃ 之 HDPE／非金屬管槽（表25-2～25-4 註2）</option>
+        <option value="tray">600V 多芯電纜敷設於電纜架（表362-1）</option>
+        <option value="air">600V 多芯電纜敷設於空氣中（表362-2）</option>
+      </select>
+    </label>
+    <label class="f">同一管（或電纜）內載流導線數
+      <select id="count">
+        <option value="3">3 條以下</option>
+        <option value="4">4 條</option>
+        <option value="6">5～6 條</option>
+        <option value="9">7～9 條</option>
+        <option value="20">10～20 條</option>
+        <option value="30">21～30 條</option>
+        <option value="40">31～40 條</option>
+        <option value="41">41 條以上</option>
+      </select>
+    </label>
+    <label class="f">周圍溫度 (℃)
+      <input type="number" id="temp" value="35" min="0" max="85" step="1">
+    </label>
+  </div>
+  <p class="note" style="margin:10px 0 0">載流導線數不含被接地導線、設備接地線、控制線與信號線；但中性線有諧波電流者要計入（第 25 條第 6 款）。</p>
+</div>
+
+<!-- NFB 反查 -->
+<section class="panel on" id="p-nfb" role="tabpanel">
+  <div class="card">
+    <h2>輸入無熔絲開關額定，查四種導線的最小線徑</h2>
+    <div class="grid">
+      <label class="f">NFB 額定電流 (A)
+        <select id="nfbIn"></select>
+      </label>
+    </div>
+    <div class="alert info" style="margin-top:12px">判定原則（第 79 條）：過電流保護裝置額定 <b>≤</b> 導線安培容量。800A 以下且標準額定無法剛好配合時，得選<b>高一級</b>（但不適用於供電給 2 個以上插座、接附插頭可撓軟線之可攜式負載電路）。另 2.0mm 線 ≤15A、3.5mm² ≤20A、5.5mm² ≤30A。</div>
+    <div class="result" id="nfbResult"></div>
+    <p class="note" id="nfbFoot"></p>
+  </div>
+</section>
+
+<!-- 條件查表 -->
+<section class="panel" id="p-calc" role="tabpanel">
+  <div class="card">
+    <h2>依條件列出各線徑安培容量與可配 NFB</h2>
+    <div class="seg" id="insSeg" role="group" aria-label="絕緣種類"></div>
+    <div id="calcAlerts"></div>
+    <div class="tablewrap" style="margin-top:10px"><table id="calcTable"></table></div>
+    <p class="note">「規則值」= 規則表值 × 導線數修正 × 周溫修正，是法定設計依據。「華新參考值」= 華新型錄電線管佈設 I<sub>n</sub> × f<sub>1</sub>(周溫) × f<sub>2</sub>(同管條數)，依 JCS 0168-1 計算，僅供比較，不可取代規則值。</p>
+  </div>
+</section>
+
+<!-- 對照總表 -->
+<section class="panel" id="p-compare" role="tabpanel">
+  <div class="card">
+    <h2>四種導線並排：規則安培容量與最大 NFB</h2>
+    <p class="note">採上方「設計條件」。每格顯示「安培容量 A ／ 可配 NFB 上限」。括號內為 800A 以下得選用的高一級。</p>
+    <div class="tablewrap"><table id="cmpTable"></table></div>
+  </div>
+</section>
+
+<!-- 廠商原始值 -->
+<section class="panel" id="p-mfr" role="tabpanel">
+  <div class="card">
+    <h2>廠商型錄原始值（未修正）</h2>
+    <div class="grid">
+      <label class="f">選擇資料表
+        <select id="mfrSel"></select>
+      </label>
+    </div>
+    <div id="mfrInfo" class="alert info"></div>
+    <div class="tablewrap"><table id="mfrTable"></table></div>
+    <div id="mfrFactors"></div>
+  </div>
+</section>
+
+<!-- 材料 -->
+<section class="panel" id="p-mat" role="tabpanel">
+  <div class="card">
+    <h2>四種絕緣材料</h2>
+    <div class="mat" id="matCards"></div>
+    <div class="alert warn">105℃ PVC 未列入規則表 25-1。本工具在「規則值」計算時將其歸入 90℃ 欄（規則最高等級），屬工具假設；實際送審前請與審查單位確認可否引用 90℃ 欄，保守做法可改用 75℃ 或 60℃ 欄。</div>
+  </div>
+</section>
+
+<!-- 規則與來源 -->
+<section class="panel" id="p-rules" role="tabpanel">
+  <div class="card">
+    <h2>規則重點（用戶用電設備裝置規則，114.05.09 修正版）</h2>
+    <ul class="plain">
+      <li><b>第 25 條</b>：導線絕緣物最高容許溫度依表 25-1；金屬導線管配線依表 25-2～25-4；PVC 管配線依表 25-5；同一管內 10 條以上以「3 以下」值乘表 25-6；周溫非 35℃ 乘表 25-7；同一回路經過不同條件時取最低值（低值段合計 ≤3m 且 ≤全長 10% 者例外）。</li>
+      <li><b>表 25-5 註</b>：PVC 管表亦適用於額定 60℃ 之 HDPE 管、非金屬可撓導線管、非金屬導線槽。<b>PVC 管表只有 60℃ 一欄</b>，XLPE 或海巴龍穿 PVC 管不會因絕緣耐溫較高而提高安培容量。</li>
+      <li><b>表 25-2～25-4 註</b>：亦適用於金屬可撓導線管、金屬導線槽及電纜；電纜裝在額定耐溫達 75℃（或 90℃）以上之 HDPE 管、非金屬可撓管、非金屬導線槽時，亦得適用。</li>
+      <li><b>第 74 條</b>：斷路器之標準安培額定依各製造廠商經型式試驗通過者為準。本工具採常見市售 NFB 額定序列：<span id="stdList"></span> A。</li>
+      <li><b>第 79 條</b>：保護裝置額定不得大於導線安培容量；800A 以下標準額定不能配合時得選高一級（不大於 800A），但供電給 2 個以上插座、接可攜式負載者除外；電動機電路另依規定；2.0mm ≤15A、3.5mm² ≤20A、5.5mm² ≤30A。</li>
+      <li><b>表 362-1／362-2</b>：600V 以下多芯電纜（載流導線 3 條以下，周溫 35℃）敷設於電纜架／空氣中之安培容量。</li>
+    </ul>
+    <h3>表 25-7 周溫修正係數</h3>
+    <div class="tablewrap"><table id="t257"></table></div>
+    <h3>表 25-6 多條載流導線修正係數（以 3 條為基準）</h3>
+    <div class="tablewrap"><table id="t256"></table></div>
+  </div>
+  <div class="card">
+    <h2>資料來源</h2>
+    <ol class="src">
+      <li><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=J0030018" target="_blank" rel="noopener">用戶用電設備裝置規則（全國法規資料庫，114.05.09 修正）</a>：第 25、74、79 條；附件表 25-1～25-7、表 362-1、362-2。</li>
+      <li><a href="https://www.walsin.com/wp-content/uploads/2020/12/600V_PVC_IV_2020.pdf" target="_blank" rel="noopener">華新麗華 WLC-A-5101C-1　600V PVC 電線安全電流表</a></li>
+      <li><a href="https://www.walsin.com/wp-content/uploads/2020/12/600V_105_PVC_2020.pdf" target="_blank" rel="noopener">華新麗華 WLC-A-5103C-1　600V 105℃ PVC 軟電線安全電流表</a></li>
+      <li><a href="https://www.walsin.com/wp-content/uploads/2020/12/600V_XLPE-PVC_2020.pdf" target="_blank" rel="noopener">華新麗華 WLC-A-5201C_A-1　600V XLPE-PVC 電力電纜安全電流表</a></li>
+      <li><a href="https://www.walsin.com/wp-content/uploads/2020/12/600V_HYPALON_2020.pdf" target="_blank" rel="noopener">華新麗華 WLC-A-5501C-1　600V 海帕龍絕緣引出線安全電流表</a></li>
+      <li><a href="https://www.walsin.com/wp-content/uploads/2020/12/600V_PVC-PVC_2020.pdf" target="_blank" rel="noopener">華新麗華 WLC-A-5104C-1　600V PVC-PVC 電力電纜安全電流表</a></li>
+      <li><a href="https://www.tatung.com/HomeImage/GetDocument/7688" target="_blank" rel="noopener">大同 交連聚乙烯電力電纜（600V～25kV）型錄</a>：表 25 周溫修正、表 26 600V XLPE 安全電流。</li>
+      <li><a href="https://www.pewc.com.tw/upload/file/%E7%94%A2%E5%93%81/03/05_%E5%BB%BA%E7%AF%89%E7%94%A8%E7%B7%9A%E5%AE%89%E5%85%A8%E9%9B%BB%E6%B5%81%E8%A1%A8.pdf" target="_blank" rel="noopener">太平洋電線電纜 建築用線安全電流表（常時連續運轉）</a>：600V PVC 電纜、600V XLPE-PVC 電纜。</li>
+    </ol>
+    <div class="alert warn">本工具為設計輔助查詢，數值以原始文件為準。廠商安全電流值依 JCS 0168-1 等計算、條件與規則不同，<b>法定設計與送審請以規則表值為依據</b>；電動機、電容器、太陽光電等回路另有專章規定，未涵蓋於本工具。</div>
+  </div>
+</section>
+
+</main>
+<footer>資料整理：2026-10 ・ 開放原始碼，歡迎指正 ・ 不構成專業簽證意見</footer>
+
+<script>
+// ---------- 線徑 ----------
+const SIZES = ["1.6","2.0","2.6","3.5","5.5","8","14","22","30","38","50","60","80","100","125","150","200","250","325","400","500"];
+const label = s => (s==="1.6"||s==="2.0"||s==="2.6") ? s+" mm" : s+" mm²";
+const area = s => (s==="1.6"||s==="2.0"||s==="2.6") ? Math.PI*(+s)**2/4 : +s;
+// 反查最小線徑時依截面積由小到大（2.6mm 單線 ≈ 5.31mm²，介於 3.5 與 5.5mm² 之間）
+const BY_AREA = SIZES.map((s,i)=>i).sort((a,b)=>area(SIZES[a])-area(SIZES[b]));
+const CAP = {"2.0":15,"3.5":20,"5.5":30}; // 第79條
+const STD = [10,15,20,30,40,50,60,75,100,125,150,175,200,225,250,300,350,400,500,600,700,800,1000,1200,1600,2000];
+
+// 依 SIZES 順序補 null
+const pad = a => { const r=a.slice(); while(r.length<SIZES.length) r.push(null); return r; };
+const padFrom = (startIdx, a) => { const r=Array(startIdx).fill(null).concat(a); while(r.length<SIZES.length) r.push(null); return r; };
+
+// ---------- 規則表 ----------
+// 金屬導線管 表25-2(60℃) 25-3(75℃) 25-4(90℃)；PVC管 表25-5(60℃)；欄位: 3以下,4,5-6,7-9
+const RULE = {
+  m60:{c3:pad([13,18,27,19,28,36,52,65,81,94,108,125,145,173,195,220,251,292,330,373,409]),
+       c4:pad([12,16,25,17,25,32,47,59,73,85,97,113,131,156,176,198,226,263,297]),
+       c6:pad([11,14,22,15,22,29,42,52,65,75,86,100,116,138,156,176,201]),
+       c9:pad([9,12,19,13,20,25,36,46,57,66,76,88,102,121,137])},
+  m75:{c3:pad([19,23,33,24,34,46,63,82,101,115,134,155,182,210,239,270,311,359,409,461,505]),
+       c4:pad([17,21,30,22,31,41,57,74,91,104,121,140,164,189,215,243,280,323,368]),
+       c6:pad([15,18,26,19,27,37,50,66,81,92,107,124,146,168,191,216,249]),
+       c9:pad([13,16,23,17,24,32,44,57,71,81,94,109,127,147,167])},
+  m90:{c3:pad([24,28,39,30,39,51,74,93,116,130,155,176,208,241,276,308,358,412,469,530,579]),
+       c4:pad([21,25,35,27,35,46,67,84,104,117,140,158,187,217,248,277,322,371,422]),
+       c6:pad([19,22,31,24,31,41,59,74,93,104,124,141,166,193,221,246,286]),
+       c9:pad([17,20,27,21,27,36,52,65,81,91,109,123,146,169,193])},
+  p60:{c3:pad([13,18,24,19,25,33,50,60,75,85,100,115,140,160,185,215,251,292,330,373,409]),
+       c4:pad([12,16,22,16,23,30,40,55,65,75,90,105,125,150,165,190,225,263,297]),
+       c6:pad([10,14,19,14,20,25,35,50,55,65,80,90,105,125,140,165,200]),
+       c9:pad([9,12,16,12,17,20,30,40,50,55,65,75,90,105,120])},
+  // 表362-1 電纜架、362-2 空氣中（3.5mm²起）
+  tray:{60:padFrom(3,[19,28,36,52,65,81,94,108,125,145,173,195,220,251,292,330,373,409]),
+        75:padFrom(3,[24,34,46,63,82,101,115,134,155,182,210,239,270,311,359,409,461,505]),
+        90:padFrom(3,[30,39,51,74,93,116,130,155,176,208,241,276,308,358,412,469,530,579])},
+  air:{60:padFrom(3,[24,32,42,60,79,96,112,132,151,178,206,236,267,310,360,409,464,508]),
+       75:padFrom(3,[31,39,52,75,97,117,138,163,185,220,254,291,329,382,446,507,575,633]),
+       90:padFrom(3,[35,46,60,85,111,135,158,186,212,252,292,334,377,439,512,583,663,730])}
+};
+// 表25-6（以3條為基準）
+const F256 = [[4,0.90],[6,0.80],[9,0.70],[20,0.50],[30,0.45],[40,0.40],[Infinity,0.35]];
+const f256 = n => n<=3 ? 1 : F256.find(r=>n<=r[0])[1];
+// 表25-7
+const T257 = [[10,1.41,1.27,1.21],[15,1.34,1.22,1.17],[20,1.26,1.17,1.13],[25,1.18,1.12,1.09],[30,1.10,1.06,1.04],
+  [35,1.00,1.00,1.00],[40,0.89,0.94,0.95],[45,0.77,0.87,0.90],[50,0.63,0.79,0.85],[55,0.45,0.71,0.80],
+  [60,null,0.61,0.74],[65,null,0.50,0.67],[70,null,0.35,0.60],[75,null,null,0.52],[80,null,null,0.43],[85,null,null,0.30]];
+const T257_LBL = ["10以下","11-15","16-20","21-25","26-30","31-35","36-40","41-45","46-50","51-55","56-60","61-65","66-70","71-75","76-80","81-85"];
+function f257(t, cls){
+  const row = T257.find(r=>t<=r[0]); if(!row) return null;
+  return row[{60:1,75:2,90:3}[cls]];
+}
+
+// ---------- 絕緣種類 ----------
+const INS = {
+  pvc:  {nm:"PVC（60℃）", cls:60, c:"var(--c-pvc)", mfr:"w_iv"},
+  xlpe: {nm:"XLPE 交連PE（90℃）", cls:90, c:"var(--c-xlpe)", mfr:"w_xlpe"},
+  pvc105:{nm:"105℃ PVC", cls:90, c:"var(--c-105)", mfr:"w_105", assume:true},
+  hyp:  {nm:"海巴龍 Hypalon（90℃）", cls:90, c:"var(--c-hyp)", mfr:"w_hyp"}
+};
+
+// ---------- 廠商資料 ----------
+const WF2 = [[1,1.00],[3,0.70],[4,0.63],[6,0.56],[15,0.49],[40,0.43],[60,0.39],[Infinity,0.34]];
+const WF2_LBL = ["1","2～3","4","5～6","7～15","16～40","41～60","60以上"];
+const WT = [20,25,30,35,40,45,50];
+const MFR = {
+  w_iv:{brand:"華新麗華",nm:"600V PVC 電線（IV，CNS 679）",doc:"WLC-A-5101C-1",tmax:60,
+    cond:"電線管佈設：一管一條，基準周溫 25℃；空中及暗渠：一條平放，基準周溫 40℃。I = In × f1 × f2（JCS 0168-1）",
+    cols:["電線管 In (A)","空中及暗渠 In (A)"],
+    data:{"1.6":[23,18],"2.0":[31,24],"3.5":[34,26],"5.5":[47,36],"8":[60,47],"14":[87,68],"22":[117,92],"30":[140,111],"38":[164,131],"50":[193,154],"60":[217,174],"80":[261,210],"100":[300,243],"125":[346,282],"150":[386,316],"200":[459,378],"250":[521,432],"325":[603,505],"400":[678,567],"500":[748,637]},
+    f1:[1.07,1.00,0.93,0.85,0.76,0.65,0.53], f3:[1.41,1.32,1.22,1.12,1.00,0.87,0.71], f3src:"f3 取自同廠 600V PVC-PVC 電纜表（同為 60℃ PVC）"},
+  w_105:{brand:"華新麗華",nm:"600V 105℃ PVC 軟電線",doc:"WLC-A-5103C-1",tmax:105,
+    cond:"電線管佈設：一管一條，基準周溫 25℃；空中及暗渠：一條平放，基準周溫 40℃。參考 CNS 679 及 UL 1581",
+    cols:["電線管 In (A)","空中及暗渠 In (A)"],
+    data:{"3.5":[48,44],"5.5":[66,61],"8":[87,81],"14":[127,119],"22":[170,160],"30":[205,195],"38":[239,228],"50":[280,268],"60":[322,310],"80":[390,378],"100":[450,440],"125":[513,504],"150":[559,552],"200":[675,673],"250":[764,768],"325":[888,901]},
+    f1:[1.03,1.00,0.97,0.94,0.90,0.87,0.83], f3:[1.14,1.11,1.07,1.04,1.00,0.96,0.92]},
+  w_xlpe:{brand:"華新麗華",nm:"600V XLPE-PVC 電力電纜（單芯，CNS 2655）",doc:"WLC-A-5201C_A-1",tmax:90,
+    cond:"電線管佈設：一管一條，基準周溫 25℃；空中及暗渠：一條平放，基準周溫 40℃",
+    cols:["電線管 In (A)","空中及暗渠 In (A)"],
+    data:{"1.6":[33,30],"2.0":[44,40],"2.6":[60,55],"3.5":[48,43],"5.5":[63,57],"8":[81,74],"14":[114,105],"22":[151,140],"30":[182,169],"38":[212,198],"50":[249,234],"60":[286,270],"80":[339,322],"100":[394,376],"125":[452,433],"150":[509,489],"200":[592,573],"250":[681,663],"325":[784,769],"400":[882,869],"500":[977,970]},
+    f1:[1.04,1.00,0.96,0.92,0.88,0.83,0.78], f3:[1.18,1.14,1.10,1.05,1.00,0.95,0.89]},
+  w_hyp:{brand:"華新麗華",nm:"600V 海帕龍絕緣引出線（CNS 5747／ICEA S-19-81）",doc:"WLC-A-5501C-1",tmax:90,
+    cond:"電線管佈設：一管一條，基準周溫 25℃；空中及暗渠：一條平放，基準周溫 40℃",
+    cols:["電線管 In (A)","空中及暗渠 In (A)"],
+    data:{"3.5":[47,42],"5.5":[61,55],"8":[76,69],"14":[114,104],"22":[154,141],"30":[186,172],"38":[216,200],"50":[254,238],"60":[292,275],"80":[354,335],"100":[409,389],"125":[464,445],"150":[506,487],"200":[610,593],"250":[690,676],"325":[799,791],"400":[900,900]},
+    f1:[1.04,1.00,0.96,0.92,0.88,0.83,0.78]},
+  t_xlpe:{brand:"大同",nm:"600V 交連 PE 電力電纜（表 26）",doc:"大同 XLPE 電力電纜型錄 表26",tmax:90,
+    cond:"空氣中：周溫 40℃，單芯 3 條間距 S=2d；線渠：基溫 25℃，單芯 4 孔 3 條。周溫修正見型錄表 25（線渠 35℃=0.92、空氣中 35℃=1.05）",
+    cols:["空氣中 單芯3條 (A)","線渠 單芯4孔3條 (A)"],
+    data:{"1.6":[33,34],"2.0":[42,43],"2.6":[58,59],"3.5":[46,47],"5.5":[59,64],"8":[74,74],"14":[105,105],"22":[135,135],"30":[170,160],"38":[190,185],"50":[230,210],"60":[260,245],"80":[315,285],"100":[365,330],"125":[420,370],"150":[480,420],"200":[560,480],"250":[655,550],"325":[760,630],"400":[870,null],"500":[965,null]}},
+  p_xlpe:{brand:"太平洋",nm:"600V XLPE-PVC 電纜（常時連續運轉）",doc:"太平洋 建築用線安全電流表 p.18",tmax:90,
+    cond:"單芯：暗渠內布設 3 條 S=2D、管路布設 4 孔 3 條；三芯：管路布設 4 孔 4 條。基準周溫依原表",
+    cols:["單芯 暗渠 3條S=2D (A)","單芯 管路 4孔3條 (A)","三芯 管路 4孔4條 (A)"],
+    data:{"3.5":[40,null,29],"5.5":[53,null,38],"8":[68,69,47],"14":[100,98,65],"22":[130,125,84],"30":[155,150,98],"38":[185,175,110],"50":[220,205,130],"60":[255,235,145],"80":[305,275,170],"100":[355,320,195],"125":[405,360,220],"150":[460,405,250],"200":[540,470,285],"250":[630,540,330],"325":[740,620,380],"400":[840,690,null],"500":[950,770,null]}},
+  p_pvc:{brand:"太平洋",nm:"600V PVC 電纜（常時連續運轉）",doc:"太平洋 建築用線安全電流表 p.17",tmax:60,
+    cond:"二芯／三芯：暗渠內布設 1 條、直接埋設 1 條、管路布設 4 孔 4 條。基準周溫依原表",
+    cols:["三芯 暗渠 1條 (A)","三芯 直埋 1條 (A)","三芯 管路 4孔4條 (A)"],
+    data:{"3.5":[21,33,23],"5.5":[28,43,30],"8":[36,53,37],"14":[50,72,51],"22":[66,92,66],"30":[75,105,75],"38":[93,125,89],"50":[105,140,100],"60":[120,160,115],"80":[135,180,130],"100":[165,215,155]}}
+};
+const wIdx = t => { for(let i=0;i<WT.length;i++) if(t<=WT[i]) return i; return null; }; // 取不低於實際周溫之欄（保守）
+const wf2 = n => (n<=3?0.70: WF2.find(r=>n<=r[0])[1]); // 3以下取 2～3 條係數（保守）
+
+// ---------- 計算 ----------
+function ruleTableFor(method, cls){
+  if(method==="pvc") return {key:"p60", cls:60, name:"表25-5"};
+  if(method==="tray") return {key:"tray", cls, name:"表362-1"};
+  if(method==="air") return {key:"air", cls, name:"表362-2"};
+  const k = {60:"m60",75:"m75",90:"m90"}[cls];
+  return {key:k, cls, name:{60:"表25-2",75:"表25-3",90:"表25-4"}[cls]};
+}
+function ruleAmp(insKey, sizeIdx, method, n, t){
+  const ins = INS[insKey]; const tb = ruleTableFor(method, ins.cls);
+  let base, nf=1;
+  if(tb.key==="tray"||tb.key==="air"){
+    base = RULE[tb.key][tb.cls][sizeIdx]; nf = f256(n);
+  } else {
+    const T = RULE[tb.key];
+    if(n<=3) base=T.c3[sizeIdx]; else if(n===4) base=T.c4[sizeIdx]; else if(n<=6) base=T.c6[sizeIdx]; else if(n<=9) base=T.c9[sizeIdx];
+    else { base=T.c3[sizeIdx]; nf=f256(n); }
+  }
+  if(base==null) return {amp:null, tb};
+  const tf = f257(t, tb.cls);
+  if(tf==null) return {amp:null, tb, tooHot:true};
+  return {amp: Math.floor(base*nf*tf*10)/10, base, nf, tf, tb};
+}
+function nfbFor(amp, size){
+  if(amp==null) return {down:null, up:null};
+  let down = null; for(const s of STD) if(s<=amp) down=s;
+  let up = null;
+  if(!STD.includes(amp) && amp<=800){ const u = STD.find(s=>s>amp); if(u && u<=800) up=u; }
+  const cap = CAP[size];
+  if(cap){ if(down!=null && down>cap) down=cap; if(up!=null && up>cap) up=null; if(down===cap) up=null; }
+  if(up!=null && down!=null && up<=down) up=null;
+  return {down, up, capped: cap && amp>cap};
+}
+function mfrAmp(insKey, size, method, n, t){
+  if(!(method==="metal"||method==="pvc"||method==="nmhi")) return null;
+  const m = MFR[INS[insKey].mfr]; const d = m.data[size]; if(!d) return null;
+  const i = wIdx(t); if(i==null) return null;
+  return Math.round(d[0]*m.f1[i]*wf2(n));
+}
+
+// ---------- 狀態 ----------
+const $ = id => document.getElementById(id);
+let curIns = "pvc";
+function cond(){ return {method:$("method").value, n:+$("count").value, t:+$("temp").value}; }
+
+function condAlerts(){
+  const {method,t} = cond(); const a=[];
+  if(method==="pvc") a.push(["warn","PVC 管表（25-5）只有 60℃ 一欄：XLPE、105℃ PVC、海巴龍穿 PVC 管時，規則值與 PVC 線相同。"]);
+  if(method==="nmhi") a.push(["info","此選項僅適用於「電纜」穿設於額定耐溫 ≥75℃（用 75℃ 欄）或 ≥90℃（用 90℃ 欄）之非金屬管槽；管材額定須不低於所採用之溫度欄。"]);
+  if(method==="tray"||method==="air") a.push(["info","表 362 僅列 3.5mm² 以上；載流導線 4 條以上依表 25-6 修正。"]);
+  if(t>50) a.push(["warn","周溫超過 50℃：華新參考值不提供；60℃ 絕緣在 56℃ 以上規則不允許使用。"]);
+  return a;
+}
+const alertHTML = a => a.map(([k,m])=>`<div class="alert ${k}">${m}</div>`).join("");
+
+// ---------- NFB 反查 ----------
+function renderNfb(){
+  const B = +$("nfbIn").value; const {method,n,t} = cond();
+  let html="";
+  for(const k of Object.keys(INS)){
+    const ins = INS[k]; let strict=null, upSel=null;
+    for(const i of BY_AREA){
+      const r = ruleAmp(k,i,method,n,t); if(r.amp==null) continue;
+      const nf = nfbFor(r.amp, SIZES[i]);
+      if(!upSel && nf.up===B) upSel={i,r};
+      if(nf.down!=null && nf.down>=B){ strict={i,r}; break; }
+    }
+    if(upSel && strict && BY_AREA.indexOf(upSel.i)>=BY_AREA.indexOf(strict.i)) upSel=null;
+    let mfr="—";
+    if(strict){ const v=mfrAmp(k,SIZES[strict.i],method,n,t); if(v!=null) mfr=v+" A"; }
+    html += `<div class="res" style="--c:${ins.c}">
+      <div class="nm"><span class="sw"></span>${ins.nm}</div>
+      ${strict ? `<div class="big">${label(SIZES[strict.i])} <small>以上</small></div>
+      <dl><dt>規則安培容量</dt><dd>${strict.r.amp} A</dd>
+      <dt>依據</dt><dd>${strict.r.tb.name}${strict.r.nf!==1?` ×${strict.r.nf}`:""} ×${strict.r.tf}</dd>
+      <dt>華新參考值</dt><dd>${mfr}</dd>
+      ${upSel ? `<dt>適用高一級時</dt><dd>${label(SIZES[upSel.i])}（${upSel.r.amp} A）</dd>`:""}</dl>`
+      : `<div class="big" style="color:var(--bad)">無適用線徑</div><dl><dt>說明</dt><dd>本條件下表列最大線徑仍不足</dd></dl>`}
+      ${ins.assume?`<p class="note" style="margin:6px 0 0">※ 規則值以 90℃ 欄計（工具假設）</p>`:""}
+    </div>`;
+  }
+  $("nfbResult").innerHTML = html;
+  $("nfbFoot").innerHTML = alertHTML(condAlerts()) + `「適用高一級」只在第 79 條第 2 款條件成立時可用，一般插座分路請以上方主要結果為準。`;
+}
+
+// ---------- 條件查表 ----------
+function renderCalc(){
+  const {method,n,t} = cond(); const ins=INS[curIns];
+  const B = +$("nfbIn").value;
+  let rows=""; let firstOk=null;
+  for(const i of BY_AREA){
+    const r = ruleAmp(curIns,i,method,n,t); const nf=nfbFor(r.amp,SIZES[i]);
+    if(firstOk==null && nf.down!=null && nf.down>=B) firstOk=i;
+  }
+  for(let i=0;i<SIZES.length;i++){
+    const s=SIZES[i]; const r = ruleAmp(curIns,i,method,n,t); const nf=nfbFor(r.amp,s); const mv=mfrAmp(curIns,s,method,n,t);
+    if(r.amp==null && mv==null) continue;
+    rows += `<tr class="${i===firstOk?"pick":""}"><td>${label(s)}</td>
+      <td>${r.base??'<span class="na">—</span>'}</td>
+      <td>${r.amp!=null?r.amp:'<span class="na">—</span>'}</td>
+      <td>${nf.down!=null?nf.down+" A":'<span class="na">—</span>'}${nf.capped?'<span class="tag cap">第79條上限</span>':""}</td>
+      <td>${nf.up!=null?`<span class="tag ok">${nf.up} A</span>`:'<span class="na">—</span>'}</td>
+      <td>${mv!=null?mv:'<span class="na">—</span>'}</td></tr>`;
+  }
+  const tb = ruleTableFor(method, ins.cls);
+  $("calcTable").innerHTML = `<thead><tr><th>線徑</th><th>規則表值 (A)<br><small>${tb.name}</small></th><th>規則值修正後 (A)</th><th>NFB 上限</th><th>得選高一級</th><th>華新參考值 (A)</th></tr></thead><tbody>${rows}</tbody>`;
+  const al = condAlerts();
+  if(ins.assume) al.unshift(["warn","105℃ PVC 未列於規則表 25-1，規則值暫以 90℃ 欄計算（工具假設，送審前請確認）。"]);
+  al.push(["info",`黃底列 = 可配 ${B} A 無熔絲開關之最小線徑（NFB 額定可在「由 NFB 反查線徑」頁變更）。`]);
+  $("calcAlerts").innerHTML = alertHTML(al);
+}
+
+// ---------- 對照總表 ----------
+function renderCmp(){
+  const {method,n,t} = cond();
+  let head = `<tr><th>線徑</th>`+Object.values(INS).map(x=>`<th><span class="sw" style="--c:${x.c}"></span>${x.nm}</th>`).join("")+`</tr>`;
+  let rows="";
+  for(let i=0;i<SIZES.length;i++){
+    let any=false; let cells="";
+    for(const k of Object.keys(INS)){
+      const r=ruleAmp(k,i,method,n,t); const nf=nfbFor(r.amp,SIZES[i]);
+      if(r.amp!=null) any=true;
+      cells += r.amp==null?`<td class="na">—</td>`:`<td>${r.amp} A ／ <b>${nf.down??"—"}</b>${nf.up?` <span class="note">(${nf.up})</span>`:""}</td>`;
+    }
+    if(any) rows+=`<tr><td>${label(SIZES[i])}</td>${cells}</tr>`;
+  }
+  $("cmpTable").innerHTML = `<thead>${head}</thead><tbody>${rows}</tbody>`;
+}
+
+// ---------- 廠商原始值 ----------
+function renderMfr(){
+  const m = MFR[$("mfrSel").value];
+  $("mfrInfo").innerHTML = `<b>${m.brand}｜${m.nm}</b>（${m.doc}，導體最高容許溫度 ${m.tmax}℃）<br>${m.cond}`;
+  let rows="";
+  for(const s of SIZES){ const d=m.data[s]; if(!d) continue;
+    rows+=`<tr><td>${label(s)}</td>${d.map(v=>`<td>${v??'<span class="na">—</span>'}</td>`).join("")}</tr>`; }
+  $("mfrTable").innerHTML = `<thead><tr><th>線徑</th>${m.cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead><tbody>${rows}</tbody>`;
+  let f="";
+  if(m.f1){
+    f+=`<h3>周溫換算係數</h3><div class="tablewrap"><table><thead><tr><th>周溫 ℃</th>${WT.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody>
+      <tr><td>f1 電線管（基準25℃）</td>${m.f1.map(x=>`<td>${x}</td>`).join("")}</tr>
+      ${m.f3?`<tr><td>f3 空中及暗渠（基準40℃）</td>${m.f3.map(x=>`<td>${x}</td>`).join("")}</tr>`:""}</tbody></table></div>`;
+    if(m.f3src) f+=`<p class="note">${m.f3src}</p>`;
+    f+=`<h3>f2 同一管內多條電線換算係數</h3><div class="tablewrap"><table><thead><tr><th>條數</th>${WF2_LBL.map(x=>`<th>${x}</th>`).join("")}</tr></thead><tbody><tr><td>f2</td>${WF2.map(x=>`<td>${x[1].toFixed(2)}</td>`).join("")}</tr></tbody></table></div>
+    <p class="note">空中及暗渠多條佈設係數 f4：S=d 時 2條0.85／3條0.80／6條0.70；S=2d 時 0.95／0.95／0.90（詳原表）。</p>`;
+  }
+  $("mfrFactors").innerHTML = f;
+}
+
+// ---------- 材料卡 ----------
+const MAT = [
+  {k:"pvc",t:"60℃",h:"PVC 聚氯乙烯",items:["規則表 25-1：PVC 導線 60℃","最常見的屋內配線（IV 線，CNS 679）","價格低、施工容易；耐熱差，高溫降額明顯（50℃ 僅剩 0.63）","燃燒會產生鹵素煙氣"]},
+  {k:"xlpe",t:"90℃",h:"XLPE 交連聚乙烯",items:["規則表 25-1：交連PE導線 90℃","600V～高壓電力電纜主流（CV，CNS 2655）","同線徑安培容量最高；緊急過載 130℃、短路 250℃（大同型錄）","幹線、電纜架、太陽光電直流／交流主幹常用"]},
+  {k:"pvc105",t:"105℃",h:"105℃ PVC（耐熱 PVC 軟電線）",items:["<b>規則表 25-1 未列此等級</b>（表中耐熱 PVC/HIV 為 75℃）","配電盤、控制盤、機器內配線常用的細芯軟線","廠商值依 CNS 679＋UL 1581，高溫降額比 60℃ PVC 小很多","本工具規則值暫以 90℃ 欄計，需經審查單位確認"]},
+  {k:"hyp",t:"90℃",h:"海巴龍 Hypalon（氯磺化聚乙烯）",items:["規則表 25-1：氯磺化聚乙烯橡膠導線 90℃","電動機、發電機、變壓器引出線（LHH，CNS 5747）","耐油、耐候、耐臭氧、柔軟好彎","Hypalon 為杜邦商標，學名 CSPE／CSM"]}
+];
+function renderMat(){
+  $("matCards").innerHTML = MAT.map(m=>`<div class="m" style="--c:${INS[m.k].c}"><h3>${m.h}</h3><div class="t">${m.t}</div><ul>${m.items.map(i=>`<li>${i}</li>`).join("")}</ul></div>`).join("");
+}
+function renderStatic(){
+  $("stdList").textContent = STD.join("、");
+  $("t257").innerHTML = `<thead><tr><th>周溫 ℃</th><th>60℃ 絕緣</th><th>75℃ 絕緣</th><th>90℃ 絕緣</th></tr></thead><tbody>`+
+    T257.map((r,i)=>`<tr><td>${T257_LBL[i]}</td>${r.slice(1).map(v=>`<td>${v??'<span class="na">—</span>'}</td>`).join("")}</tr>`).join("")+`</tbody>`;
+  $("t256").innerHTML = `<thead><tr><th>載流導線數</th><th>4</th><th>5-6</th><th>7-9</th><th>10-20</th><th>21-30</th><th>31-40</th><th>41以上</th></tr></thead><tbody><tr><td>修正係數</td>${F256.map(r=>`<td>${Math.round(r[1]*100)}%</td>`).join("")}</tr></tbody>`;
+}
+
+// ---------- 初始化 ----------
+$("nfbIn").innerHTML = STD.filter(s=>s<=800).map(s=>`<option value="${s}" ${s===30?"selected":""}>${s} A</option>`).join("");
+$("insSeg").innerHTML = Object.entries(INS).map(([k,v])=>`<button type="button" data-ins="${k}" aria-pressed="${k===curIns}">${v.nm}</button>`).join("");
+$("mfrSel").innerHTML = Object.entries(MFR).map(([k,m])=>`<option value="${k}">${m.brand}｜${m.nm}</option>`).join("");
+$("insSeg").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; curIns=b.dataset.ins;
+  document.querySelectorAll("#insSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b)); renderCalc();});
+function renderAll(){ renderNfb(); renderCalc(); renderCmp(); }
+["method","count","temp","nfbIn"].forEach(id=>$(id).addEventListener("input",renderAll));
+$("mfrSel").addEventListener("input",renderMfr);
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  document.querySelectorAll("section.panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+b.dataset.tab));
+  $("condCard").style.display = (b.dataset.tab==="mfr"||b.dataset.tab==="mat"||b.dataset.tab==="rules")?"none":"";
+  try{localStorage.setItem("tab",b.dataset.tab)}catch(e){}
+}));
+$("themeBtn").addEventListener("click",()=>{
+  const r=document.documentElement; const dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark?"light":"dark"; try{localStorage.setItem("theme",r.dataset.theme)}catch(e){}
+});
+try{ const th=localStorage.getItem("theme"); if(th) document.documentElement.dataset.theme=th; }catch(e){}
+renderStatic(); renderMat(); renderMfr(); renderAll();
+try{ const tab=localStorage.getItem("tab"); if(tab){ const b=document.querySelector(`nav.tabs button[data-tab="${tab}"]`); if(b) b.click(); } }catch(e){}
+</script>
+</body>
+</html>
