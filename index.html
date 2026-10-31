@@ -38,7 +38,7 @@ h1{font-size:1.45rem;margin:0;line-height:1.35}
 .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .themebtn{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:10px;padding:8px 14px;min-height:44px;cursor:pointer;font:inherit;font-size:.95rem}
 .fsbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
-nav.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--border);background:var(--surface)}
+nav.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--border);background:var(--surface)}
 nav.tabs button{flex:0 0 auto;border:0;background:none;color:var(--muted);padding:12px 16px;min-height:48px;font:inherit;font-size:1rem;cursor:pointer;border-bottom:3px solid transparent}
 nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 main{padding:18px 0 40px}
@@ -96,7 +96,7 @@ footer{color:var(--muted);font-size:.9rem;text-align:center;padding:16px}
 .flow .lk::after{content:"";display:block;width:100%;height:3px;background:var(--accent);margin-top:4px;border-radius:2px}
 tr.click{cursor:pointer} tr.click:hover td{background:var(--accent-soft)}
 .mini{border:1px solid var(--accent);background:none;color:var(--accent);border-radius:8px;padding:4px 10px;font:inherit;font-size:.9rem;cursor:pointer;min-height:36px}
-header nav.tabs{flex-wrap:nowrap;padding-top:0;padding-bottom:0;justify-content:flex-start}
+header nav.tabs{flex-wrap:wrap;padding-top:0;padding-bottom:0;justify-content:flex-start}
 @media (max-width:760px){
   header nav.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px 12px}
   nav.tabs button{border:1px solid var(--border);border-radius:10px;text-align:center;padding:10px 8px;color:var(--text);white-space:normal;line-height:1.35}
