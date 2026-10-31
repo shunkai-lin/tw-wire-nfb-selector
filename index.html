@@ -126,7 +126,7 @@ header nav.tabs{flex-wrap:wrap;padding-top:0;padding-bottom:0;justify-content:fl
     <button role="tab" data-tab="compare" aria-selected="false">四種導線對照總表</button>
     <button role="tab" data-tab="gen" aria-selected="false">發電機回路選用</button>
     <button role="tab" data-tab="genm" aria-selected="false">發電機機型（大同／中興）</button>
-    <button role="tab" data-tab="mfr" aria-selected="false">廠商型錄原始值</button>
+    <button role="tab" data-tab="mfr" aria-selected="false">電纜廠商型錄原始值</button>
     <button role="tab" data-tab="mat" aria-selected="false">絕緣材料說明</button>
     <button role="tab" data-tab="rules" aria-selected="false">規則重點與來源</button>
   </nav>
@@ -285,7 +285,8 @@ header nav.tabs{flex-wrap:wrap;padding-top:0;padding-bottom:0;justify-content:fl
 <!-- 廠商原始值 -->
 <section class="panel" id="p-mfr" role="tabpanel">
   <div class="card">
-    <h2>廠商型錄原始值（未修正）</h2>
+    <h2>電纜廠商型錄原始值（未套用周溫、同管條數換算係數）</h2>
+    <p class="note">下表為型錄在其基準條件（基準周溫、一管一條或指定佈設方式）下的安全電流，未乘周溫係數 f1／f3 與多條佈設係數 f2／f4，也不是規則值；實際條件請用下方係數換算。</p>
     <div class="grid">
       <label class="f">選擇資料表
         <select id="mfrSel"></select>
