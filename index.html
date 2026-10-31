@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>線徑與無熔絲開關選用</title>
-<meta name="description" content="依《用戶用電設備裝置規則》與華新麗華、大同、太平洋電線電纜型錄，查詢 PVC、XLPE、105℃ PVC、海巴龍導線之安培容量與對應無熔絲開關（NFB）額定。">
+<meta name="description" content="依《用戶用電設備裝置規則》與華新麗華、大同、太平洋電線電纜型錄，查詢 PVC、XLPE、105℃ PVC、海巴龍導線之安培容量與對應無熔絲開關（NFB）額定；並提供發電機→控制盤→ATS 回路之開關、ACB 與線徑選用，以及大同、中興 30～750kW 發電機機型對照。">
 <style>
 :root{
   --bg:#f6f7f9; --surface:#ffffff; --surface-2:#f0f2f5; --text:#1b1f24; --muted:#5d6672;
@@ -88,6 +88,14 @@ ol.src li,ul.plain li{margin:4px 0}
 a{color:var(--accent)}
 footer{color:var(--muted);font-size:.9rem;text-align:center;padding:16px}
 .sw{display:inline-block;width:.75em;height:.75em;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:middle}
+.flow{display:flex;align-items:stretch;gap:0;margin:16px 0;overflow-x:auto}
+.flow .nd{flex:1 1 0;min-width:150px;border:2px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--surface-2);text-align:center}
+.flow .nd b{display:block;font-size:1.05rem}
+.flow .nd span{font-size:.92rem;color:var(--muted)}
+.flow .lk{flex:1 1 0;min-width:130px;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:.9rem;padding:0 6px;text-align:center;color:var(--accent);font-weight:600}
+.flow .lk::after{content:"";display:block;width:100%;height:3px;background:var(--accent);margin-top:4px;border-radius:2px}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--accent-soft)}
+.mini{border:1px solid var(--accent);background:none;color:var(--accent);border-radius:8px;padding:4px 10px;font:inherit;font-size:.9rem;cursor:pointer;min-height:36px}
 header nav.tabs{flex-wrap:nowrap;padding-top:0;padding-bottom:0;justify-content:flex-start}
 @media (max-width:760px){
   header nav.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px 12px}
@@ -102,7 +110,7 @@ header nav.tabs{flex-wrap:nowrap;padding-top:0;padding-bottom:0;justify-content:
   <div class="wrap">
     <div>
       <h1>線徑 × 安培容量 × 無熔絲開關 選用工具</h1>
-      <p class="sub">PVC／XLPE／105℃ PVC／海巴龍 ・ 依《用戶用電設備裝置規則》（114.05.09 修正）＋ 華新麗華・大同・太平洋型錄</p>
+      <p class="sub">PVC／XLPE／105℃ PVC／海巴龍 ・ 發電機→控制盤→ATS 回路 ・ 依《用戶用電設備裝置規則》（114.05.09 修正）＋ 華新麗華・大同・太平洋・中興型錄</p>
     </div>
     <div class="tools" role="group" aria-label="顯示設定">
       <span class="note" style="color:var(--text)">字級</span>
@@ -116,6 +124,8 @@ header nav.tabs{flex-wrap:nowrap;padding-top:0;padding-bottom:0;justify-content:
     <button role="tab" data-tab="nfb" aria-selected="true">由 NFB 反查線徑</button>
     <button role="tab" data-tab="calc" aria-selected="false">依條件查安培容量</button>
     <button role="tab" data-tab="compare" aria-selected="false">四種導線對照總表</button>
+    <button role="tab" data-tab="gen" aria-selected="false">發電機回路選用</button>
+    <button role="tab" data-tab="genm" aria-selected="false">發電機機型（大同／中興）</button>
     <button role="tab" data-tab="mfr" aria-selected="false">廠商型錄原始值</button>
     <button role="tab" data-tab="mat" aria-selected="false">絕緣材料說明</button>
     <button role="tab" data-tab="rules" aria-selected="false">規則重點與來源</button>
@@ -191,6 +201,87 @@ header nav.tabs{flex-wrap:nowrap;padding-top:0;padding-bottom:0;justify-content:
   </div>
 </section>
 
+<!-- 發電機回路 -->
+<section class="panel" id="p-gen" role="tabpanel">
+  <div class="card">
+    <h2>發電機 → 控制盤 → ATS 盤：開關與線徑</h2>
+    <div class="grid">
+      <label class="f">電壓系統
+        <select id="gV">
+          <option value="220">220V 三相三線（3φ3W）</option>
+          <option value="380">380/220V 三相四線（3φ4W）</option>
+        </select>
+      </label>
+      <label class="f">發電機額定 (kW)
+        <input type="number" id="gKw" value="200" min="5" max="4000" step="1">
+      </label>
+      <label class="f">功率因數
+        <input type="number" id="gPf" value="0.8" min="0.5" max="1" step="0.05">
+      </label>
+      <label class="f">發電機出線導線容量 ≥ 額定電流 ×
+        <select id="gK">
+          <option value="1.15">115%（NEC 445.13）</option>
+          <option value="1.25">125%（保守）</option>
+        </select>
+      </label>
+      <label class="f">導線絕緣
+        <select id="gIns"></select>
+      </label>
+      <label class="f">單根最大線徑（超過即並聯）
+        <select id="gMax">
+          <option value="150">150 mm²</option>
+          <option value="200">200 mm²</option>
+          <option value="250">250 mm²</option>
+          <option value="325" selected>325 mm²</option>
+          <option value="500">500 mm²</option>
+        </select>
+      </label>
+    </div>
+    <div class="seg" id="gQuick" style="margin-top:12px" role="group" aria-label="常用容量"></div>
+    <div class="flow" id="gFlow"></div>
+    <div class="result" id="gResult"></div>
+    <div id="gAlerts"></div>
+  </div>
+  <div class="card">
+    <h2>30～750 kW 一覽（套用目前所有條件）</h2>
+    <p class="note">點任一列可帶入上方計算。導線欄為「每相條數 × 線徑」，三相四線另加同規格中性線。</p>
+    <div class="tablewrap"><table id="gTable"></table></div>
+  </div>
+  <div class="card">
+    <h2>判定方式</h2>
+    <ul class="plain">
+      <li><b>額定電流</b> I<sub>n</sub> = kW × 1000 ÷ (PF × √3 × V)。</li>
+      <li><b>發電機主開關</b>（裝於控制盤）：取 ≥ 115% I<sub>n</sub> 之標準額定。≤ 800A 用 MCCB；超過 800A 用 ACB，表列 Ir 為電子脫扣長延時設定值（以框架 5% 為級距）。</li>
+      <li><b>導線</b>：同時滿足 ① 安培容量 ≥ 115% I<sub>n</sub>（發電機出線，NEC 445.13；台灣規則對應條文待確認）② 第 79 條：開關額定 ≤ 導線安培容量，800A 以下得選高一級。控制盤→ATS 段同由主開關保護，故兩段取同一線徑。</li>
+      <li><b>並聯</b>：每組導線各自穿管（每管 3 條，三相四線 4 條），各組長度、線徑、材質、端子須一致；並聯導線一般限 50mm² 以上。</li>
+      <li><b>ATS</b>：額定 ≥ I<sub>n</sub> 之標準值；三相四線發電機中性點接地屬獨立系統，ATS 採 <b>4P</b>（中性線同時切換）。</li>
+      <li>安培容量取自上方「設計條件」（配線方式、同管導線數、周溫），與其他分頁共用同一套規則表。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 發電機機型 -->
+<section class="panel" id="p-genm" role="tabpanel">
+  <div class="card">
+    <h2>大同 TPU／中興 CH 柴油發電機組（30～750 kW）</h2>
+    <div class="grid">
+      <label class="f">品牌
+        <select id="mBrand"><option value="">全部</option><option>大同</option><option>中興</option></select>
+      </label>
+      <label class="f">引擎系列
+        <select id="mSeries"></select>
+      </label>
+      <label class="f">需求容量 (kW)，列出 ≥ 此值
+        <input type="number" id="mKw" value="0" min="0" max="750" step="10">
+      </label>
+    </div>
+    <div class="alert info"><b>兩家共通</b>：60Hz、1800rpm、功因 0.8、三相。大同型錄電壓 208/120～480/277V「訂購時請指明」，220V 3φ3W 與 380/220V 3φ4W 皆可；中興型錄未印電壓，註明「不同電壓需求可配合提供」。型號數字為 kVA，kW = kVA × 0.8。</div>
+    <p class="note" id="mCount"></p>
+    <div class="tablewrap"><table id="mTable"></table></div>
+    <p class="note">大同 kW 為發電機額定（型錄另列之 Standby／Prime 為引擎出力，未收錄）；中興列 Standby／Prime kW。Standby＝無超載能力之最大輸出；Prime＝每 12 小時運轉中可超載 10%／1 小時。引擎欄空白者為型錄欄位無法逐一對應，請查原型錄。點「帶入」可把該機型容量送到「發電機回路選用」。</p>
+  </div>
+</section>
+
 <!-- 廠商原始值 -->
 <section class="panel" id="p-mfr" role="tabpanel">
   <div class="card">
@@ -243,6 +334,9 @@ header nav.tabs{flex-wrap:nowrap;padding-top:0;padding-bottom:0;justify-content:
       <li><a href="https://www.walsin.com/wp-content/uploads/2020/12/600V_HYPALON_2020.pdf" target="_blank" rel="noopener">華新麗華 WLC-A-5501C-1　600V 海帕龍絕緣引出線安全電流表</a></li>
       <li><a href="https://www.walsin.com/wp-content/uploads/2020/12/600V_PVC-PVC_2020.pdf" target="_blank" rel="noopener">華新麗華 WLC-A-5104C-1　600V PVC-PVC 電力電纜安全電流表</a></li>
       <li><a href="https://www.tatung.com/HomeImage/GetDocument/7688" target="_blank" rel="noopener">大同 交連聚乙烯電力電纜（600V～25kV）型錄</a>：表 25 周溫修正、表 26 600V XLPE 安全電流。</li>
+      <li><a href="https://www.tatung.com/Products/Index/134" target="_blank" rel="noopener">大同 TPU 柴油引擎發電機組</a>：Weifang、DEUTZ、John Deere、SDEC、CCEC、Cummins、Perkins、Volvo、Hyundai 各系列規格表 PDF。</li>
+      <li><a href="https://www.chem.com.tw/tc/products_detail.aspx?Class1=2&amp;PKey=650" target="_blank" rel="noopener">中興電工 CH 柴油發電機組</a>：Volvo、Cummins、Perkins、Hyundai、FPT 型錄。</li>
+      <li>NFPA 70（NEC）445.13：發電機出線導線安培容量 ≥ 銘牌電流 115%（工具採用之設計慣例，台灣規則對應條文請另行確認）。</li>
       <li><a href="https://www.pewc.com.tw/upload/file/%E7%94%A2%E5%93%81/03/05_%E5%BB%BA%E7%AF%89%E7%94%A8%E7%B7%9A%E5%AE%89%E5%85%A8%E9%9B%BB%E6%B5%81%E8%A1%A8.pdf" target="_blank" rel="noopener">太平洋電線電纜 建築用線安全電流表（常時連續運轉）</a>：600V PVC 電纜、600V XLPE-PVC 電纜。</li>
     </ol>
     <div class="alert warn">本工具為設計輔助查詢，數值以原始文件為準。廠商安全電流值依 JCS 0168-1 等計算、條件與規則不同，<b>法定設計與送審請以規則表值為依據</b>；電動機、電容器、太陽光電等回路另有專章規定，未涵蓋於本工具。</div>
@@ -527,19 +621,151 @@ function renderStatic(){
   $("t256").innerHTML = `<thead><tr><th>載流導線數</th><th>4</th><th>5-6</th><th>7-9</th><th>10-20</th><th>21-30</th><th>31-40</th><th>41以上</th></tr></thead><tbody><tr><td>修正係數</td>${F256.map(r=>`<td>${Math.round(r[1]*100)}%</td>`).join("")}</tr></tbody>`;
 }
 
+// ---------- 發電機回路 ----------
+const MCCB_AF = [100,225,250,400,630,800];
+const ACB_AF = [1000,1250,1600,2000,2500,3200,4000];
+const ATS_STD = [100,160,200,250,400,630,800,1000,1250,1600,2000,2500,3200,4000];
+const GEN_KW = [30,40,50,60,80,100,125,150,200,250,300,350,400,500,600,750];
+const PAR_MIN = 50; // mm²，並聯導線最小線徑
+
+function genBreaker(req){
+  if(req<=800){
+    const at = STD.find(s=>s>=req);
+    return {acb:false, at, af:MCCB_AF.find(f=>f>=at), set:at};
+  }
+  const af = ACB_AF.find(f=>f>=req); if(!af) return null;
+  const step = af*0.05, set = Math.ceil(req/step-1e-9)*step;
+  return {acb:true, af, set, ratio:set/af};
+}
+// 第79條：開關 ≤ 導線容量；800A 以下得選高一級
+const protects = (amp, P) => amp>=P || (P<=800 && STD.find(s=>s>amp)===P);
+
+function genCable(insKey, req, P, maxSize){
+  const {method,n,t} = cond(); const out=[];
+  for(let k=1;k<=12 && out.length<2;k++){
+    for(const i of BY_AREA){
+      const s=SIZES[i]; if(area(s)>maxSize) continue; if(k>1 && area(s)<PAR_MIN) continue;
+      const r=ruleAmp(insKey,i,method,n,t); if(r.amp==null) continue;
+      const tot=Math.floor(r.amp*k*10)/10;
+      if(tot>=req && protects(tot,P)){ if(!out.some(o=>o.k===k)) out.push({k,s,amp:r.amp,tot,r}); break; }
+    }
+  }
+  return out;
+}
+function genCalc(kw, V, pf, kf, insKey, maxSize){
+  const In = kw*1000/(pf*Math.sqrt(3)*V), req = In*kf;
+  const br = genBreaker(req); if(!br) return {In, req, br:null, cab:[]};
+  const ats = ATS_STD.find(a=>a>=In);
+  return {In, req, br, ats, atsTight: ats && In>0.9*ats, cab:genCable(insKey, req, br.set, maxSize)};
+}
+const brTxt = b => !b ? "超出範圍" : b.acb ? `ACB ${b.af}AF，Ir ${b.ratio.toFixed(2)}（${Math.round(b.set)}A）` : `MCCB ${b.af}AF／${b.at}AT`;
+const cabTxt = c => c ? (c.k>1?`${c.k} × `:"")+label(c.s) : "—";
+
+function gv(){ return {kw:+$("gKw").value, V:+$("gV").value, pf:+$("gPf").value||0.8, kf:+$("gK").value, ins:$("gIns").value, max:+$("gMax").value}; }
+function renderGen(){
+  const g=gv(); const four = g.V===380;
+  const R = genCalc(g.kw,g.V,g.pf,g.kf,g.ins,g.max); const c=R.cab[0];
+  const ins=INS[g.ins]; const pole = four?"4P":"3P";
+  const wires = c ? (four?`每組 4 條（3 相＋N）`:`每組 3 條`) : "";
+  $("gFlow").innerHTML = `<div class="nd"><b>發電機</b><span>${g.kw} kW／${(g.kw/g.pf).toFixed(1)} kVA<br>${four?"380/220V 3φ4W":"220V 3φ3W"}</span></div>
+    <div class="lk">${cabTxt(c)}<br><span class="note">${c&&c.k>1?"並聯":""}</span></div>
+    <div class="nd"><b>控制盤</b><span>${brTxt(R.br)}<br>${pole}</span></div>
+    <div class="lk">${cabTxt(c)}<br><span class="note">${four?"＋同規格 N":""}</span></div>
+    <div class="nd"><b>ATS 盤</b><span>${R.ats?R.ats+"A "+pole:"—"}</span></div>`;
+  let h = `<div class="res" style="--c:var(--accent)"><div class="nm">額定電流</div>
+    <div class="big">${R.In.toFixed(1)} <small>A</small></div>
+    <dl><dt>${Math.round(g.kf*100)}% 額定</dt><dd>${R.req.toFixed(1)} A</dd><dt>kVA</dt><dd>${(g.kw/g.pf).toFixed(1)}</dd></dl></div>`;
+  h += `<div class="res" style="--c:var(--c-105)"><div class="nm">發電機主開關（控制盤）</div>
+    <div class="big">${R.br?(R.br.acb?"ACB":"MCCB"):"—"} <small>${R.br?R.br.af+"AF "+pole:""}</small></div>
+    <dl>${R.br?(R.br.acb?`<dt>Ir 設定</dt><dd>${R.br.ratio.toFixed(2)} × ${R.br.af} = ${Math.round(R.br.set)} A</dd>`:`<dt>額定</dt><dd>${R.br.at} AT</dd>`):""}
+    <dt>ATS 額定</dt><dd>${R.ats?R.ats+" A "+pole:"—"}</dd></dl></div>`;
+  h += `<div class="res" style="--c:${ins.c}"><div class="nm"><span class="sw"></span>${ins.nm}</div>
+    ${c?`<div class="big">${cabTxt(c)} <small>/相</small></div>
+    <dl><dt>單條安培容量</dt><dd>${c.amp} A</dd><dt>合計</dt><dd>${c.tot} A</dd><dt>依據</dt><dd>${c.r.tb.name}${c.r.nf!==1?` ×${c.r.nf}`:""} ×${c.r.tf}</dd>
+    <dt>配置</dt><dd>${wires}${c.k>1?`，${c.k} 管`:""}</dd>
+    ${R.cab[1]?`<dt>另一方案</dt><dd>${cabTxt(R.cab[1])}（${R.cab[1].tot} A）</dd>`:""}</dl>`
+    :`<div class="big" style="color:var(--bad)">無適用組合</div><dl><dt>說明</dt><dd>請放寬單根最大線徑或改配線方式</dd></dl>`}
+    ${c && needLug(c.s)?`<div class="alert bad">⚠ ${LUG_MSG}</div>`:""}</div>`;
+  $("gResult").innerHTML = h;
+  const al = condAlerts();
+  if(R.atsTight) al.unshift(["warn",`ATS ${R.ats}A 僅比額定電流高 ${((R.ats/R.In-1)*100).toFixed(0)}%，長時間滿載建議升一級（${ATS_STD.find(a=>a>R.ats)}A）。`]);
+  if(R.br && !R.br.acb && R.br.at>=630) al.push(["info","主開關 630A 以上可考慮改用 ACB，便於與下游開關做選擇性協調。"]);
+  if(c && c.k>=4) al.push(["warn","每相需 4 組以上並聯，建議改用匯流排槽（Busway），或改 380V 系統降低電流。"]);
+  if(four) al.push(["info","380/220V 三相四線：中性線與相線同規格；若中性線有諧波電流，「同一管內載流導線數」請選 4 條。"]);
+  if(ins.assume) al.push(["warn","105℃ PVC 規則值以 90℃ 欄計（工具假設）。"]);
+  al.push(["info","設備接地線依第 26 條按主開關額定選用；距離長時另核電壓降（一般 ≤ 2%）。"]);
+  $("gAlerts").innerHTML = alertHTML(al);
+  document.querySelectorAll("#gQuick button").forEach(b=>b.setAttribute("aria-pressed", +b.dataset.kw===g.kw));
+  renderGenTable();
+}
+function renderGenTable(){
+  const g=gv();
+  $("gTable").innerHTML = `<thead><tr><th>kW</th><th>kVA</th><th>I<sub>n</sub> (A)</th><th>主開關</th><th>ATS</th><th>導線 /相</th><th>合計容量 (A)</th></tr></thead><tbody>`+
+    GEN_KW.map(kw=>{ const R=genCalc(kw,g.V,g.pf,g.kf,g.ins,g.max); const c=R.cab[0];
+      return `<tr class="click${kw===g.kw?" pick":""}" data-kw="${kw}"><td>${kw}</td><td>${(kw/g.pf).toFixed(1)}</td><td>${R.In.toFixed(0)}</td>
+        <td>${brTxt(R.br)}</td><td>${R.ats??"—"}${R.atsTight?' <span class="tag cap">偏緊</span>':""}</td>
+        <td>${cabTxt(c)}${c?lugTag(c.s):""}</td><td>${c?c.tot:"—"}</td></tr>`; }).join("")+`</tbody>`;
+}
+
+// ---------- 發電機機型資料 ----------
+// 大同：型號,kVA,kW,引擎（kW 為發電機額定）；中興：型號,kVA,Standby kW,Prime kW,引擎
+const T_RAW = {
+  "Weifang 濰柴":"TPU-38,37.5,30,K4102D;TPU-50,50,40,K4102ZD;TPU-75,75,60,R4105IZLD;TPU-100,100,80,R6105ZD;TPU-125,125,100,R6105AZLD;TPU-150,150,120,R6105IZLD;TPU-188,187.5,150,TH6XD-2;TPU-250,250,200,6126AZLD;TPU-313,312.5,250,618IZLD;TPU-375,375,300,6126ZLD-355",
+  "DEUTZ":"TPU-38,38,30,D226B-3;TPU-50,50,40,TD226B-3;TPU-63,63,50,TD226B-4;TPU-75,75,60,TD226B-4;TPU-88,87.5,70,BF4M2012C;TPU-94,93.8,75,BF4M1013EC G1;TPU-100,100,80,TD226B-6;TPU-113,112.5,90,BF4M1013EC G2;TPU-125,125,100,TD226B-6;TPU-144,144,115,BF4M1013FC;TPU-156,156,125,BF6M1013EC／TBD226B-6;TPU-188,188,150,BF6M1013FC G1;TPU-250,250,200,BF6M1013FC G2;TPU-375,375,300,BF6M1015CG1;TPU-500,500,400,BF8M1015CG1;TPU-563,562.5,450,BF8M1015CP",
+  "John Deere":"TPU-50,50,40,4039DF008／4045DF158;TPU-63,63,50,4045TF158;TPU-75,75,60,4045TF158;TPU-100,100,80,4045TF258;TPU-125,125,100,6068TF158;TPU-156,156,125,6068TF258;TPU-188,188,150,6068HF158;TPU-250,250,200,6068HFU55;TPU-313,313,250,6090HFU84;TPU-375,375,300,6135HF475;TPU-500,500,400,6135HF475",
+  "SDEC 上柴":"TPU-63,62.5,50,;TPU-75,75,60,;TPU-100,100,80,;TPU-125,125,100,;TPU-156,156.25,125,;TPU-188,187.5,150,;TPU-219,218.75,175,;TPU-250,250,200,;TPU-313,312.5,250,;TPU-375,375,300,;TPU-438,437.5,350,;TPU-500,500,400,;TPU-625,625,500,;TPU-750,750,600,",
+  "CCEC 重慶康明斯":"TPU-50,50,40,;TPU-63,63,50,;TPU-100,100,80,;TPU-125,125,100,;TPU-219,219,175,;TPU-344,344,275,;TPU-375,375,300,;TPU-438,438,350,;TPU-500,500,400,;TPU-563,563,450,;TPU-625,625,500,KTA19-G4;TPU-750,750,600,KTAA19-G7;TPU-850,850,680,KT38-G;TPU-938,938,750,KTA38-G",
+  "Cummins":"TPU-125,125,100,QSB5-G5;TPU-187,187,150,QSB7-G3;TPU-218,218,175,QSB7-G4;TPU-250,250,200,QSB7-G5;TPU-287,287,230,QSL9-G2;TPU-312,312,250,QSL9-G3;TPU-343,343,275,QSL9-G4;TPU-375,375,300,QSL9-G5／QSL9-G7／NTA855-G2;TPU-438,438,350,NTA855-G3;TPU-500,500,400,NTA855-G5／QSX15G8;TPU-563,563,450,KTA19-G3;TPU-625,625,500,KTA19-G4／QSX15G9;TPU-750,750,600,VTA28-G5;TPU-938,938,750,QSK23-G6",
+  "Perkins":"TPU-75,75,60,1104C-44TG1／1104D-E44TG1;TPU-100,100,80,1104C-44TAG1／1104D-E44TAG1;TPU-125,125,100,1104C-44TAG2／1104D-E44TAG2;TPU-191,191,153,1106D-E70TAG3;TPU-250,250,200,1106D-E70TAG5／1206D-E70TTAG1;TPU-323,323,258,1706D-E93TAG1;TPU-392,392,314,1706D-E93TAG2;TPU-438,438,350,2206D-E13TAG2;TPU-500,500,400,2206D-E13TAG3;TPU-563,563,450,2506D-E15TAG1;TPU-625,625,500,2506C-E15TAG3;TPU-687,687,550,2506C-E15TAG4;TPU-750,750,600,2806C-E18TAG3;TPU-895,895,716,2806C-E18TTAG6;TPU-938,938,750,2806C-E18TTAG7",
+  "Volvo":"TPU-100,100,80,;TPU-125,125,100,;TPU-156,156,125,;TPU-188,188,150,;TPU-219,219,175,;TPU-250,250,200,;TPU-281,281,225,TAD754GE／TAD734GE;TPU-313,313,250,TAD842GE／TAD1350GE;TPU-375,375,300,TAD1341GE-B／TAD1351GE;TPU-438,438,350,TAD1342GE-B／TAD1352GE／TAD1354GE／TAD1355GE;TPU-500,500,400,TAD1344GE-B／TAD1353GE;TPU-563,563,450,;TPU-625,625,500,;TPU-688,688,550,;TPU-750,750,600,",
+  "Hyundai":"TPU-156,156,125,DP054CA／DP054CAK／DP054CAV;TPU-188,188,150,DP054CB／DP054CBK／DP054CBV／P086TI-1;TPU-219,219,175,P086TI-1／DP054CC／DP054CCV;TPU-250,250,200,P086TI／DP086CA／DP086CAK;TPU-275,275,220,DP086CB／DP086CBK／DP086CBV／DP086LA;TPU-313,313,250,DP086CC／DP086CCK／DP086CCV／P126TI;TPU-344,344,275,P126TI;TPU-375,375,300,P126TI-II／DP126CA／DP126CAK／DP086CE;TPU-438,438,350,DP126LB／DP126CB／DP126CBK;TPU-500,500,400,;TPU-563,563,450,;TPU-625,625,500,;TPU-688,688,550,;TPU-750,750,600,;TPU-813,813,650,;TPU-875,875,700,;TPU-938,938,750,"
+};
+const C_RAW = {
+  "Volvo":"CH-100,100,80,73,TAD550GE;CH-125,125,100,91,TAD532GE／TAD551GE;CH-157,157,125,114,TAD750GE;CH-188,188,150,136,TAD751GE;CH-219,219,175,160,TAD732GE／TAD752GE;CH-250,250,200,182,TAD753GE／TAD733GE;CH-275,275,220,200,TAD754GE／TAD734GE;CH-313,313,250,231,TAD1350GE;CH-375,375,300,275,TAD1341GE／TAD1351GE;CH-438,438,350,318,TAD1342GE／TAD1352GE;CH-500,500,400,364,TAD1344GE;CH-563,563,450,410,TAD1640GE／TAD1650GE;CH-625,625,500,455,TAD1641GE／TAD1651GE;CH-688,688,550,500,TAD1642GE;CH-750,750,600,545,TWD1643GE",
+  "Cummins":"CH-75,75,60,55,QSB5-G1;CH-100,100,80,70,QSB5-G3;CH-113,113,90,70,QSB5-G4;CH-125,125,100,90,QSB5-G5;CH-156,156,125,110,QSB5-G6;CH-188,188,150,135,QSB7-G3;CH-219,219,175,160,QSB7-G4;CH-250,250,200,180,QSB7-G5;CH-288,288,230,210,QSL9-G2;CH-313,313,250,225,QSL9-G3;CH-344,344,275,250,QSL9-G4;CH-375,375,300,275,QSL9-G7;CH-500,500,400,360,QSX15-G8;CH-625,625,500,450,QSX15-G9;CH-688,688,550,500,QSK19-G4;CH-750,750,600,545,QSK19-G5;CH-938,938,750,680,QSK23-G6",
+  "Perkins":"CH-38,38,30,25,1103C-33G2;CH-56,56,45,40,1104C-44G2;CH-75,75,60,50,1104C-44TG1／1104C-44TG2;CH-100,100,80,70,1104C-44TAG1;CH-125,125,100,90,1104C-44TAG2;CH-125,125,100,95,1006TG2A（非環保）;CH-163,163,130,120,1006TAG（非環保）;CH-188,188,150,135,1106D-E66TAG3;CH-219,219,175,160,1206D-E70TTAG1;CH-250,250,200,185,1206D-E70TTAG1;CH-313,313,250,225,1506D-E88TAG3;CH-375,375,300,250,1506D-E88TAG5;CH-438,438,350,320,2206D-E13TAG2;CH-500,500,400,350,2206D-E13TAG3;CH-563,563,450,400,2506D-E15TAG1;CH-625,625,500,450,2506C-E15TAG3;CH-688,688,550,500,2506C-E15TAG4;CH-750,750,600,545,2806C-E18TAG3;CH-938,938,750,675,4006-23TAG3A",
+  "Hyundai":"CH-188,188,150,135,P086TI-1;CH-219,219,175,155,P086TI;CH-250,250,200,180,P086TI;CH-313,313,250,225,P126TI;CH-375,375,300,270,P126TI-II;CH-438,438,350,315,DP126LB;CH-500,500,400,360,P158LE;CH-563,563,450,405,DP158LC;CH-625,625,500,450,DP158LD;CH-688,688,550,495,DP180LA;CH-750,750,600,540,DP180LB;CH-813,813,650,585,DP222LA;CH-875,875,700,630,DP222LB;CH-938,938,750,675,DP222LC／DP222CA",
+  "FPT":"CH-50,50,40,36,F32SM1A／F32SM1X;CH-56,56,45,41,N45AM1A;CH-63,63,50,45,F32TM1A／F32TM1X／N45SM1X;CH-69,69,55,50,N45SM1A;CH-75,75,60,54,N45SM2A／N45SM2X;CH-100,100,80,72,N45TM1A／N45TM2X;CH-113,113,90,81,N45TM2A;CH-125,125,100,90,N67TM2A;CH-156,156,125,113,N67TM2A／N67TM1X;CH-188,188,150,135,N67TM3A／N67TE1X;CH-219,219,175,158,N67TE2X;CH-250,250,200,180,N67TE2A;CH-313,313,250,225,C87TE1D;CH-363,363,290,261,C10TE1D;CH-375,375,300,270,C13TE2A;CH-413,413,330,297,C13TE2A;CH-438,438,350,315,C13TE3A／C13TE3X"
+};
+const GEN = [];
+for(const [s,raw] of Object.entries(T_RAW)) for(const r of raw.split(";")){ const [m,kva,kw,e]=r.split(","); GEN.push({b:"大同",s,m,kva:+kva,kw:+kw,pr:null,e}); }
+for(const [s,raw] of Object.entries(C_RAW)) for(const r of raw.split(";")){ const [m,kva,kw,pr,e]=r.split(","); GEN.push({b:"中興",s,m,kva:+kva,kw:+kw,pr:+pr,e}); }
+
+function renderGenM(){
+  const b=$("mBrand").value, s=$("mSeries").value, k=+$("mKw").value||0;
+  const rows = GEN.filter(x=>(!b||x.b===b)&&(!s||x.s===s)&&x.kw>=k).sort((x,y)=>x.kw-y.kw||x.b.localeCompare(y.b)||x.s.localeCompare(y.s));
+  $("mCount").textContent = `共 ${rows.length} 筆` + (k?`（≥ ${k} kW，依容量排序）`:"");
+  $("mTable").innerHTML = `<thead><tr><th>型號</th><th>品牌</th><th>引擎系列</th><th>kVA</th><th>kW（大同額定／中興 Standby）</th><th>Prime kW</th><th style="text-align:left">引擎型號</th><th></th></tr></thead><tbody>`+
+    rows.map(x=>`<tr><td>${x.m}</td><td style="text-align:left">${x.b}</td><td style="text-align:left">${x.s}</td><td>${x.kva}</td><td><b>${x.kw}</b></td><td>${x.pr??'<span class="na">—</span>'}</td><td style="text-align:left;white-space:normal;min-width:180px">${x.e||'<span class="na">—</span>'}</td><td><button class="mini" type="button" data-kw="${x.kw}">帶入</button></td></tr>`).join("")+`</tbody>`;
+}
+function fillSeries(){
+  const b=$("mBrand").value; const ss=[...new Set(GEN.filter(x=>!b||x.b===b).map(x=>x.s))];
+  $("mSeries").innerHTML = `<option value="">全部</option>`+ss.map(x=>`<option>${x}</option>`).join("");
+}
+function gotoGen(kw){ $("gKw").value=kw; document.querySelector('nav.tabs button[data-tab="gen"]').click(); renderGen(); window.scrollTo({top:0,behavior:"smooth"}); }
+
 // ---------- 初始化 ----------
 $("nfbIn").innerHTML = STD.filter(s=>s<=800).map(s=>`<option value="${s}" ${s===30?"selected":""}>${s} A</option>`).join("");
 $("insSeg").innerHTML = Object.entries(INS).map(([k,v])=>`<button type="button" data-ins="${k}" aria-pressed="${k===curIns}">${v.nm}</button>`).join("");
 $("mfrSel").innerHTML = Object.entries(MFR).map(([k,m])=>`<option value="${k}">${m.brand}｜${m.nm}</option>`).join("");
 $("insSeg").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; curIns=b.dataset.ins;
   document.querySelectorAll("#insSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b)); renderCalc();});
-function renderAll(){ renderNfb(); renderCalc(); renderCmp(); }
+$("gIns").innerHTML = Object.entries(INS).map(([k,v])=>`<option value="${k}" ${k==="xlpe"?"selected":""}>${v.nm}</option>`).join("");
+$("gQuick").innerHTML = GEN_KW.map(k=>`<button type="button" data-kw="${k}">${k} kW</button>`).join("");
+$("gQuick").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; $("gKw").value=b.dataset.kw; renderGen();});
+$("gTable").addEventListener("click",e=>{const tr=e.target.closest("tr[data-kw]"); if(!tr) return; $("gKw").value=tr.dataset.kw; renderGen(); $("p-gen").scrollIntoView({behavior:"smooth"});});
+["gV","gKw","gPf","gK","gIns","gMax"].forEach(id=>$(id).addEventListener("input",renderGen));
+fillSeries();
+$("mBrand").addEventListener("input",()=>{fillSeries(); renderGenM();});
+["mSeries","mKw"].forEach(id=>$(id).addEventListener("input",renderGenM));
+$("mTable").addEventListener("click",e=>{const b=e.target.closest("button[data-kw]"); if(b) gotoGen(+b.dataset.kw);});
+function renderAll(){ renderNfb(); renderCalc(); renderCmp(); renderGen(); }
 ["method","count","temp","nfbIn"].forEach(id=>$(id).addEventListener("input",renderAll));
 $("mfrSel").addEventListener("input",renderMfr);
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
   document.querySelectorAll("section.panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+b.dataset.tab));
-  $("condCard").style.display = (b.dataset.tab==="mfr"||b.dataset.tab==="mat"||b.dataset.tab==="rules")?"none":"";
+  $("condCard").style.display = ["mfr","mat","rules","genm"].includes(b.dataset.tab)?"none":"";
   try{localStorage.setItem("tab",b.dataset.tab)}catch(e){}
 }));
 $("themeBtn").addEventListener("click",()=>{
@@ -550,7 +776,7 @@ try{ const th=localStorage.getItem("theme"); if(th) document.documentElement.dat
 function setFs(v){ document.documentElement.dataset.fs=v; document.querySelectorAll(".fsbtn").forEach(b=>b.setAttribute("aria-pressed",b.dataset.fs===v)); try{localStorage.setItem("fs",v)}catch(e){} }
 document.querySelectorAll(".fsbtn").forEach(b=>b.addEventListener("click",()=>setFs(b.dataset.fs)));
 let fs0="l"; try{ fs0=localStorage.getItem("fs")||"l"; }catch(e){} setFs(fs0);
-renderStatic(); renderMat(); renderMfr(); renderAll();
+renderStatic(); renderMat(); renderMfr(); renderGenM(); renderAll();
 try{ const tab=localStorage.getItem("tab"); if(tab){ const b=document.querySelector(`nav.tabs button[data-tab="${tab}"]`); if(b) b.click(); } }catch(e){}
 </script>
 </body>
