@@ -175,7 +175,7 @@ header nav.tabs{flex-wrap:wrap;padding-top:0;padding-bottom:0;justify-content:fl
         <select id="nfbIn"></select>
       </label>
     </div>
-    <div class="alert info" style="margin-top:12px">判定原則（第 79 條）：過電流保護裝置額定 <b>≤</b> 導線安培容量。800A 以下且標準額定無法剛好配合時，得選<b>高一級</b>（但不適用於供電給 2 個以上插座、接附插頭可撓軟線之可攜式負載電路）。另 2.0mm 線 ≤15A、3.5mm² ≤20A、5.5mm² ≤30A。</div>
+    <div class="alert info" style="margin-top:12px">判定原則（第 79 條）：過電流保護裝置額定 <b>≤</b> 導線安培容量。另 2.0mm 線 ≤15A、3.5mm² ≤20A、5.5mm² ≤30A。</div>
     <div class="result" id="nfbResult"></div>
     <p class="note" id="nfbFoot"></p>
   </div>
@@ -196,7 +196,7 @@ header nav.tabs{flex-wrap:wrap;padding-top:0;padding-bottom:0;justify-content:fl
 <section class="panel" id="p-compare" role="tabpanel">
   <div class="card">
     <h2>四種導線並排：規則安培容量與最大 NFB</h2>
-    <p class="note">採上方「設計條件」。每格顯示「安培容量 A ／ 可配 NFB 上限」。括號內為 800A 以下得選用的高一級。</p>
+    <p class="note">採上方「設計條件」。每格顯示「安培容量 A ／ 可配 NFB 上限」。</p>
     <div class="tablewrap"><table id="cmpTable"></table></div>
   </div>
 </section>
@@ -252,7 +252,7 @@ header nav.tabs{flex-wrap:wrap;padding-top:0;padding-bottom:0;justify-content:fl
     <ul class="plain">
       <li><b>額定電流</b> I<sub>n</sub> = kW × 1000 ÷ (PF × √3 × V)。</li>
       <li><b>發電機主開關</b>（裝於控制盤）：取 ≥ 115% I<sub>n</sub> 之標準額定。≤ 800A 用 MCCB；超過 800A 用 ACB，表列 Ir 為電子脫扣長延時設定值（以框架 5% 為級距）。</li>
-      <li><b>導線</b>：同時滿足 ① 安培容量 ≥ 115% I<sub>n</sub>（發電機出線，NEC 445.13；台灣規則對應條文待確認）② 第 79 條：開關額定 ≤ 導線安培容量，800A 以下得選高一級。控制盤→ATS 段同由主開關保護，故兩段取同一線徑。</li>
+      <li><b>導線</b>：同時滿足 ① 安培容量 ≥ 115% I<sub>n</sub>（發電機出線，NEC 445.13；台灣規則對應條文待確認）② 第 79 條：開關額定 ≤ 導線安培容量。控制盤→ATS 段同由主開關保護，故兩段取同一線徑。</li>
       <li><b>並聯</b>：每組導線各自穿管（每管 3 條，三相四線 4 條），各組長度、線徑、材質、端子須一致；並聯導線一般限 50mm² 以上。</li>
       <li><b>ATS</b>：額定 ≥ I<sub>n</sub> 之標準值；三相四線發電機中性點接地屬獨立系統，ATS 採 <b>4P</b>（中性線同時切換）。</li>
       <li>安培容量取自上方「設計條件」（配線方式、同管導線數、周溫），與其他分頁共用同一套規則表。</li>
@@ -316,7 +316,7 @@ header nav.tabs{flex-wrap:wrap;padding-top:0;padding-bottom:0;justify-content:fl
       <li><b>表 25-5 註</b>：PVC 管表亦適用於額定 60℃ 之 HDPE 管、非金屬可撓導線管、非金屬導線槽。<b>PVC 管表只有 60℃ 一欄</b>，XLPE 或海巴龍穿 PVC 管不會因絕緣耐溫較高而提高安培容量。</li>
       <li><b>表 25-2～25-4 註</b>：亦適用於金屬可撓導線管、金屬導線槽及電纜；電纜裝在額定耐溫達 75℃（或 90℃）以上之 HDPE 管、非金屬可撓管、非金屬導線槽時，亦得適用。</li>
       <li><b>第 74 條</b>：斷路器之標準安培額定依各製造廠商經型式試驗通過者為準。本工具採常見市售 NFB 額定序列：<span id="stdList"></span> A。</li>
-      <li><b>第 79 條</b>：保護裝置額定不得大於導線安培容量；800A 以下標準額定不能配合時得選高一級（不大於 800A），但供電給 2 個以上插座、接可攜式負載者除外；電動機電路另依規定；2.0mm ≤15A、3.5mm² ≤20A、5.5mm² ≤30A。</li>
+      <li><b>第 79 條</b>：保護裝置額定不得大於導線安培容量；電動機電路另依規定；2.0mm ≤15A、3.5mm² ≤20A、5.5mm² ≤30A。</li>
       <li><b>端子施工</b>：線徑 200mm² 以上之壓接端子須採雙孔式（施工規範常見要求，非用戶用電設備裝置規則條文）；本工具在選到 200mm² 以上時會跳出提醒。</li>
       <li><b>表 362-1／362-2</b>：600V 以下多芯電纜（載流導線 3 條以下，周溫 35℃）敷設於電纜架／空氣中之安培容量。</li>
     </ul>
@@ -478,14 +478,11 @@ function ruleAmp(insKey, sizeIdx, method, n, t){
   return {amp: Math.floor(base*nf*tf*10)/10, base, nf, tf, tb};
 }
 function nfbFor(amp, size){
-  if(amp==null) return {down:null, up:null};
+  if(amp==null) return {down:null};
   let down = null; for(const s of STD) if(s<=amp) down=s;
-  let up = null;
-  if(!STD.includes(amp) && amp<=800){ const u = STD.find(s=>s>amp); if(u && u<=800) up=u; }
   const cap = CAP[size];
-  if(cap){ if(down!=null && down>cap) down=cap; if(up!=null && up>cap) up=null; if(down===cap) up=null; }
-  if(up!=null && down!=null && up<=down) up=null;
-  return {down, up, capped: cap && amp>cap};
+  if(cap && down!=null && down>cap) down=cap;
+  return {down, capped: cap && amp>cap};
 }
 function mfrAmp(insKey, size, method, n, t){
   if(!(method==="metal"||method==="pvc"||method==="nmhi")) return null;
@@ -514,14 +511,12 @@ function renderNfb(){
   const B = +$("nfbIn").value; const {method,n,t} = cond();
   let html=""; let anyLug=false;
   for(const k of Object.keys(INS)){
-    const ins = INS[k]; let strict=null, upSel=null;
+    const ins = INS[k]; let strict=null;
     for(const i of BY_AREA){
       const r = ruleAmp(k,i,method,n,t); if(r.amp==null) continue;
       const nf = nfbFor(r.amp, SIZES[i]);
-      if(!upSel && nf.up===B) upSel={i,r};
       if(nf.down!=null && nf.down>=B){ strict={i,r}; break; }
     }
-    if(upSel && strict && BY_AREA.indexOf(upSel.i)>=BY_AREA.indexOf(strict.i)) upSel=null;
     let mfr="—";
     if(strict){ const v=mfrAmp(k,SIZES[strict.i],method,n,t); if(v!=null) mfr=v+" A"; }
     html += `<div class="res" style="--c:${ins.c}">
@@ -529,15 +524,14 @@ function renderNfb(){
       ${strict ? `<div class="big">${label(SIZES[strict.i])} <small>以上</small></div>
       <dl><dt>規則安培容量</dt><dd>${strict.r.amp} A</dd>
       <dt>依據</dt><dd>${strict.r.tb.name}${strict.r.nf!==1?` ×${strict.r.nf}`:""} ×${strict.r.tf}</dd>
-      <dt>華新參考值</dt><dd>${mfr}</dd>
-      ${upSel ? `<dt>適用高一級時</dt><dd>${label(SIZES[upSel.i])}（${upSel.r.amp} A）</dd>`:""}</dl>`
+      <dt>華新參考值</dt><dd>${mfr}</dd></dl>`
       : `<div class="big" style="color:var(--bad)">無適用線徑</div><dl><dt>說明</dt><dd>本條件下表列最大線徑仍不足</dd></dl>`}
       ${strict && needLug(SIZES[strict.i]) ? (anyLug=true, `<div class="alert bad">⚠ ${LUG_MSG}</div>`) : ""}
       ${ins.assume?`<p class="note" style="margin:6px 0 0">※ 規則值以 90℃ 欄計（工具假設）</p>`:""}
     </div>`;
   }
   $("nfbResult").innerHTML = (anyLug ? `<div class="alert bad" style="grid-column:1/-1;font-size:1.05rem">⚠ 有選用線徑達 200mm² 以上：${LUG_MSG}</div>` : "") + html;
-  $("nfbFoot").innerHTML = alertHTML(condAlerts()) + `「適用高一級」只在第 79 條第 2 款條件成立時可用，一般插座分路請以上方主要結果為準。`;
+  $("nfbFoot").innerHTML = alertHTML(condAlerts());
 }
 
 // ---------- 條件查表 ----------
@@ -577,7 +571,7 @@ function renderCmp(){
     for(const k of Object.keys(INS)){
       const r=ruleAmp(k,i,method,n,t); const nf=nfbFor(r.amp,SIZES[i]);
       if(r.amp!=null) any=true;
-      cells += r.amp==null?`<td class="na">—</td>`:`<td>${r.amp} A ／ <b>${nf.down??"—"}</b>${nf.up?` <span class="note">(${nf.up})</span>`:""}</td>`;
+      cells += r.amp==null?`<td class="na">—</td>`:`<td>${r.amp} A ／ <b>${nf.down??"—"}</b></td>`;
     }
     if(any) rows+=`<tr><td>${label(SIZES[i])}${lugTag(SIZES[i])}</td>${cells}</tr>`;
   }
@@ -637,8 +631,8 @@ function genBreaker(req){
   const step = af*0.05, set = Math.ceil(req/step-1e-9)*step;
   return {acb:true, af, set, ratio:set/af};
 }
-// 第79條：開關 ≤ 導線容量；800A 以下得選高一級
-const protects = (amp, P) => amp>=P || (P<=800 && STD.find(s=>s>amp)===P);
+// 第79條：開關 ≤ 導線容量
+const protects = (amp, P) => amp>=P;
 
 function genCable(insKey, req, P, maxSize){
   const {method,n,t} = cond(); const out=[];
