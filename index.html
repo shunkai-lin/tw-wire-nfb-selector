@@ -556,11 +556,10 @@ function renderCalc(){
       <td>${r.base??'<span class="na">—</span>'}</td>
       <td>${r.amp!=null?r.amp:'<span class="na">—</span>'}</td>
       <td>${nf.down!=null?nf.down+" A":'<span class="na">—</span>'}${nf.capped?'<span class="tag cap">第79條上限</span>':""}</td>
-      <td>${nf.up!=null?`<span class="tag ok">${nf.up} A</span>`:'<span class="na">—</span>'}</td>
       <td>${mv!=null?mv:'<span class="na">—</span>'}</td></tr>`;
   }
   const tb = ruleTableFor(method, ins.cls);
-  $("calcTable").innerHTML = `<thead><tr><th>線徑</th><th>規則表值 (A)<br><small>${tb.name}</small></th><th>規則值修正後 (A)</th><th>NFB 上限</th><th>得選高一級</th><th>華新參考值 (A)</th></tr></thead><tbody>${rows}</tbody>`;
+  $("calcTable").innerHTML = `<thead><tr><th>線徑</th><th>規則表值 (A)<br><small>${tb.name}</small></th><th>規則值修正後 (A)</th><th>NFB 上限</th><th>華新參考值 (A)</th></tr></thead><tbody>${rows}</tbody>`;
   const al = condAlerts();
   if(ins.assume) al.unshift(["warn","105℃ PVC 未列於規則表 25-1，規則值暫以 90℃ 欄計算（工具假設，送審前請確認）。"]);
   if(firstOk!=null && needLug(SIZES[firstOk])) al.unshift(["bad",`⚠ 可配 ${B} A 之最小線徑為 ${label(SIZES[firstOk])}：${LUG_MSG}`]);
