@@ -359,7 +359,7 @@ const LUG_MSG = "200mm² 以上導線之壓接端子須採<b>雙孔式</b>固定
 const lugTag = s => needLug(s) ? `<span class="tag lug">雙孔端子</span>` : "";
 const BY_AREA = SIZES.map((s,i)=>i).sort((a,b)=>area(SIZES[a])-area(SIZES[b]));
 const CAP = {"2.0":15,"3.5":20,"5.5":30}; // 第79條
-const STD = [10,15,20,30,40,50,60,75,100,125,150,175,200,225,250,300,350,400,500,600,700,800,1000,1200,1600,2000];
+const STD = [10,15,20,30,40,50,60,75,100,125,150,175,200,225,250,300,350,400,500,600,700,800,1000,1200,1600,2000,2500,3200,4000];
 
 // 依 SIZES 順序補 null
 const pad = a => { const r=a.slice(); while(r.length<SIZES.length) r.push(null); return r; };
@@ -519,19 +519,43 @@ function renderNfb(){
     }
     let mfr="—";
     if(strict){ const v=mfrAmp(k,SIZES[strict.i],method,n,t); if(v!=null) mfr=v+" A"; }
+    // 單根不足、或單根已達 200mm² 以上時，列出並聯方案
+    const par = (!strict || needLug(SIZES[strict.i])) ? parOptions(k,B,method,n,t) : [];
+    const p0 = !strict ? par[0] : null;
+    const alt = strict ? par : par.slice(1);
+    const parTxt = o => `${o.k} 回路 × ${label(SIZES[o.i])}（合計 ${o.tot} A）`;
     html += `<div class="res" style="--c:${ins.c}">
       <div class="nm"><span class="sw"></span>${ins.nm}</div>
       ${strict ? `<div class="big">${label(SIZES[strict.i])} <small>以上</small></div>
       <dl><dt>規則安培容量</dt><dd>${strict.r.amp} A</dd>
       <dt>依據</dt><dd>${strict.r.tb.name}${strict.r.nf!==1?` ×${strict.r.nf}`:""} ×${strict.r.tf}</dd>
-      <dt>華新參考值</dt><dd>${mfr}</dd></dl>`
-      : `<div class="big" style="color:var(--bad)">無適用線徑</div><dl><dt>說明</dt><dd>本條件下表列最大線徑仍不足</dd></dl>`}
-      ${strict && needLug(SIZES[strict.i]) ? (anyLug=true, `<div class="alert bad">⚠ ${LUG_MSG}</div>`) : ""}
+      <dt>華新參考值</dt><dd>${mfr}</dd>
+      ${alt.length?`<dt>或並聯</dt><dd>${alt.map(parTxt).join("<br>")}</dd>`:""}</dl>`
+      : p0 ? `<div class="big">${p0.k} × ${label(SIZES[p0.i])} <small>並聯</small></div>
+      <dl><dt>配置</dt><dd>每相 ${p0.k} 條，分 ${p0.k} 管</dd>
+      <dt>單條安培容量</dt><dd>${p0.r.amp} A</dd><dt>合計</dt><dd>${p0.tot} A</dd>
+      <dt>依據</dt><dd>${p0.r.tb.name}${p0.r.nf!==1?` ×${p0.r.nf}`:""} ×${p0.r.tf}</dd>
+      ${alt.length?`<dt>其他方案</dt><dd>${alt.map(parTxt).join("<br>")}</dd>`:""}</dl>`
+      : `<div class="big" style="color:var(--bad)">無適用線徑</div><dl><dt>說明</dt><dd>並聯 12 回路仍不足，建議改匯流排槽</dd></dl>`}
+      ${(strict && needLug(SIZES[strict.i])) || (p0 && needLug(SIZES[p0.i])) ? (anyLug=true, `<div class="alert bad">⚠ ${LUG_MSG}</div>`) : ""}
       ${ins.assume?`<p class="note" style="margin:6px 0 0">※ 規則值以 90℃ 欄計（工具假設）</p>`:""}
     </div>`;
   }
   $("nfbResult").innerHTML = (anyLug ? `<div class="alert bad" style="grid-column:1/-1;font-size:1.05rem">⚠ 有選用線徑達 200mm² 以上：${LUG_MSG}</div>` : "") + html;
-  $("nfbFoot").innerHTML = alertHTML(condAlerts());
+  $("nfbFoot").innerHTML = alertHTML(condAlerts()) + `並聯方案：每回路各自穿管（每管放一組 3 條，三相四線 4 條），各回路導線長度、線徑、材質、端子須一致，並聯導線限 ${PAR_MIN}mm² 以上、單根最大取 325mm²；每管載流導線數依上方「設計條件」計算。800A 以上通常採 ACB。`;
+}
+// 並聯方案：每種回路數取最小線徑，最多列 3 種
+function parOptions(insKey, B, method, n, t){
+  const out=[];
+  for(let k=2;k<=12 && out.length<3;k++){
+    for(const i of BY_AREA){
+      const a=area(SIZES[i]); if(a<PAR_MIN || a>325) continue;
+      const r=ruleAmp(insKey,i,method,n,t); if(r.amp==null) continue;
+      const tot=Math.floor(r.amp*k*10)/10;
+      if(tot>=B){ if(!out.some(o=>o.i===i)) out.push({k,i,r,tot}); break; }
+    }
+  }
+  return out;
 }
 
 // ---------- 條件查表 ----------
@@ -739,7 +763,7 @@ function fillSeries(){
 function gotoGen(kw){ $("gKw").value=kw; document.querySelector('nav.tabs button[data-tab="gen"]').click(); renderGen(); window.scrollTo({top:0,behavior:"smooth"}); }
 
 // ---------- 初始化 ----------
-$("nfbIn").innerHTML = STD.filter(s=>s<=800).map(s=>`<option value="${s}" ${s===30?"selected":""}>${s} A</option>`).join("");
+$("nfbIn").innerHTML = STD.map(s=>`<option value="${s}" ${s===30?"selected":""}>${s} A</option>`).join("");
 $("insSeg").innerHTML = Object.entries(INS).map(([k,v])=>`<button type="button" data-ins="${k}" aria-pressed="${k===curIns}">${v.nm}</button>`).join("");
 $("mfrSel").innerHTML = Object.entries(MFR).map(([k,m])=>`<option value="${k}">${m.brand}｜${m.nm}</option>`).join("");
 $("insSeg").addEventListener("click",e=>{const b=e.target.closest("button"); if(!b) return; curIns=b.dataset.ins;
